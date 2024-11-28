@@ -23,6 +23,14 @@ public interface ProductManager {
 	List<ProductDTO> findAllProducts();
 	
 	/**
+	 * Consulta en base todos los productos que contengan en el nombre la cadena
+	 * recibida por parametro.
+	 * 
+	 * @return
+	 */
+	List<ProductDTO> findProductsByNombre(String nombre);
+	
+	/**
 	 * Crea un registro en base partiendo del DTO recibido por parametros.
 	 * @param product
 	 * @return

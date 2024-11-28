@@ -2,6 +2,7 @@ package com.agendapro.product_demo.managers.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,12 @@ public class ProductManagerImpl implements ProductManager {
 	
 	public void deleteProduct(ProductDTO product) {
 		repository.deleteById(product.getId());
+	}
+
+	@Override
+	public List<ProductDTO> findProductsByNombre(String nombre) {
+		Set<Product> products = repository.findByNombreContaining(nombre);
+		return products.stream().map(product -> mapper.map(product, ProductDTO.class)).toList();
 	}
 
 }
