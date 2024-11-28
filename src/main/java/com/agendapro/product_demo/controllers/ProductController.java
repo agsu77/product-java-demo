@@ -50,9 +50,12 @@ public class ProductController {
 		return products;
 	}
 	
-	private void obtenerProductosPorNombre() {
-		// TODO Auto-generated method stub
-
+	@GetMapping(value = "/porNombre/{nombre}")
+	public List<ProductDTO> obtenerProductosPorNombre(@PathVariable String nombre) {
+		logger.info("Recibo request obtenerProductosPorNombre - buscando por nombre: "+ nombre);
+		List<ProductDTO> products = manager.findProductsByNombre(nombre);
+		logger.info("Devuelvo "+ products.size() + " productos por el nombre "+ nombre);
+		return products;
 	}
 	
 	@PostMapping(value = {"","/"})
