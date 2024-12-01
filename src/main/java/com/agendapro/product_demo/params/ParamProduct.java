@@ -1,6 +1,7 @@
 package com.agendapro.product_demo.params;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import com.agendapro.product_demo.entities.Categoria;
 
@@ -17,7 +18,7 @@ public class ParamProduct implements Serializable {
 	private String nombre;
 	private Categoria categoria;
 	@NotNull
-	private Double precio;
+	private BigDecimal precio;
 	@Min(value = 0, message = "El valor menor de stock es cero.")
 	private Integer stock;
 
