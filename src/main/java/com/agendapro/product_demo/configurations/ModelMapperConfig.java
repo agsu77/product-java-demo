@@ -1,4 +1,4 @@
-package com.agendapro.product_demo.configuration;
+package com.agendapro.product_demo.configurations;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

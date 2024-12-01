@@ -2,44 +2,42 @@ package com.agendapro.product_demo.entities;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "PRODUCTS")
+@Table(name = "Estadistica")
 @Data
-@EntityListeners(value = AuditingEntityListener.class)
-@AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+@AllArgsConstructor
+public class Estadistica {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Nonnull
-	private String nombre;
-	@Nonnull
+	@OneToOne()
+	@JoinColumn(referencedColumnName = "id", name = "tipo")
+	private TipoEstadistica tipo;
+	private String valor;
 	@Enumerated(EnumType.STRING)
+	@Null
 	private Categoria categoria;
-	@Nonnull
-	private boolean disponible;
-	private Integer stock;
-	private Double precio;
+	@NotNull
 	@CreatedDate
-	private LocalDateTime fechaCreacion;
-	@UpdateTimestamp
-	private LocalDateTime fechaModificacion;
+	private LocalDateTime fecha;
+	
 }

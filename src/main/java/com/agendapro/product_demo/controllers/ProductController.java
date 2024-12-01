@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,16 +17,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.agendapro.product_demo.dto.ProductDTO;
 import com.agendapro.product_demo.exceptions.ProductoNotFound;
+import com.agendapro.product_demo.jms.EventQueue;
 import com.agendapro.product_demo.managers.ProductManager;
+import com.agendapro.product_demo.params.ParamModificarProduct;
 import com.agendapro.product_demo.params.ParamProduct;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 @RestController
-@RequestMapping(name = "/api/v1/producto")
+@RequestMapping(value = "/api/v1/producto")
+@RequiredArgsConstructor
 public class ProductController {
 
 	private Logger logger = Logger.getLogger(this.getClass().getName());
-	@Autowired ProductManager manager;
-	@Autowired ModelMapper mapper;
+	private final ProductManager manager;
+	private final ModelMapper mapper;
+	private final EventQueue events;
 	
 	@GetMapping(value = "/{id}")
 	@ResponseStatus(code = HttpStatus.OK)
@@ -43,6 +49,7 @@ public class ProductController {
 	}
 	
 	@GetMapping(value = {"/",""})
+	@ResponseStatus(value = HttpStatus.OK)
 	public List<ProductDTO> obtenerTodosLosProducto() {
 		logger.info("Recibo request obtenerTodosLosProducto");
 		List<ProductDTO> products = manager.findAllProducts();
@@ -50,22 +57,29 @@ public class ProductController {
 		return products;
 	}
 	
-	private void obtenerProductosPorNombre() {
-		// TODO Auto-generated method stub
-
+	@GetMapping(value = "/porNombre/{nombre}")
+	@ResponseStatus(value = HttpStatus.OK)
+	public List<ProductDTO> obtenerProductosPorNombre(@PathVariable String nombre) {
+		logger.info("Recibo request obtenerProductosPorNombre - buscando por nombre: "+ nombre);
+		List<ProductDTO> products = manager.findProductsByNombre(nombre);
+		logger.info("Devuelvo "+ products.size() + " productos por el nombre "+ nombre);
+		return products;
 	}
 	
 	@PostMapping(value = {"","/"})
-	public ProductDTO crearProducto(@RequestBody ParamProduct param) {
+	@ResponseStatus(value = HttpStatus.CREATED)
+	public ProductDTO crearProducto(@Valid @RequestBody ParamProduct param) {
 		logger.info("Recibo request crearProducto para "+ param);
 		ProductDTO dto = mapper.map(param, ProductDTO.class);
 		dto = manager.saveProduct(dto);
 		logger.info("Retorno el producto creado "+ dto);
+		events.sendMessage();
 		return dto;
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ProductDTO actualizarProducto(@PathVariable Long id, @RequestBody ParamProduct param) {
+	@ResponseStatus(value = HttpStatus.OK)
+	public ProductDTO actualizarProducto(@PathVariable Long id, @Valid @RequestBody ParamModificarProduct param) {
 		logger.info("Recibo un request de actualizarProducto para el id "+ id);
 		ProductDTO productFound = manager.findProductById(id);
 		if(productFound == null) {
@@ -82,6 +96,7 @@ public class ProductController {
 	}
 	
 	@DeleteMapping(value = "/{id}")
+	@ResponseStatus(value = HttpStatus.OK)
 	public void eliminarProducto(@PathVariable Long id) {
 		logger.info("Recibo un request de eliminarProducto para el id "+ id);
 		ProductDTO productFound = manager.findProductById(id);
