@@ -9,12 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.agendapro.product_demo.dto.ProductDTO;
+import com.agendapro.product_demo.entities.Categoria;
 import com.agendapro.product_demo.entities.Product;
 import com.agendapro.product_demo.managers.ProductManager;
 import com.agendapro.product_demo.repositories.ProductRepository;
 
 @Service
-public class ProductManagerImpl implements ProductManager {
+public class ProductsManagerImpl implements ProductManager {
 
 	@Autowired private ProductRepository repository;
 	@Autowired private ModelMapper mapper;
@@ -48,6 +49,23 @@ public class ProductManagerImpl implements ProductManager {
 	public List<ProductDTO> findProductsByNombre(String nombre) {
 		Set<Product> products = repository.findByNombreContaining(nombre);
 		return products.stream().map(product -> mapper.map(product, ProductDTO.class)).toList();
+	}
+
+	@Override
+	public ProductDTO findProductWithBiggestStock() {
+		Product product = repository.findTopByOrderByStockDesc();
+		return mapper.map(product, ProductDTO.class);
+	}
+
+	@Override
+	public ProductDTO findProductLastestCreated() {
+		Product product = repository.findTopByOrderByFechaCreacionDesc();
+		return mapper.map(product, ProductDTO.class);
+	}
+
+	@Override
+	public Integer countByCategoria(Categoria categoria) {
+		return repository.countByCategoria(categoria);
 	}
 
 }
