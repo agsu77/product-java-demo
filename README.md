@@ -44,7 +44,7 @@ En la API publicamos 7 funcionalidades:
 ### Ejecución Local
 1. **Clonar el repositorio:**
    ```bash
-   git clone <url-del-repositorio>
+   git clone https://github.com/agsu77/product-java-demo.git
    ```
 2. **Crear el contenedor**
     ```bash
