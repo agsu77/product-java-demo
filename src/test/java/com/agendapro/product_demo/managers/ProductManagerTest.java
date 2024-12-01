@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,8 +78,8 @@ class ProductManagerTest {
 	 */
 	@Test
 	void testFindAllProducts() {
-		List<Product> mockProductos = List.of(productEntity2);
-		when(repository.findAll()).thenReturn(mockProductos);
+		Set<Product> mockProductos = Set.of(productEntity2);
+		when(repository.findAllByDisponibleTrue()).thenReturn(mockProductos);
 		when(mapper.map(productEntity2, ProductDTO.class)).thenReturn(productDTO2);
 		List<ProductDTO> result = productManager.findAllProducts();
 		assertNotNull(result);
