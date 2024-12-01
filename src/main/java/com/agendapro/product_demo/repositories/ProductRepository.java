@@ -15,26 +15,35 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	Set<Product> findByNombreContaining(String nombre);
 	
 	/**
-	 * Nos consulta la tabla products ordena por stock decrecientemente y devuelve
+	 * Busca solo los productos disponibles en base.
+	 * 
+	 * @return
+	 */
+	Set<Product> findAllByDisponibleTrue();
+	
+	/**
+	 * Nos consulta la tabla products, ordena por stock decrecientemente y devuelve
 	 * el primero.
 	 * 
 	 * @return
 	 */
-	Product findTopByOrderByStockDesc();
+	Product findTopByDisponibleTrueOrderByStockDesc();
 	
 	/**
-	 * Nos consulta la tabla products ordena por fechaCreacion decrecientemente y devuelve
-	 * el primero.
+	 * Nos consulta la tabla products, ordena por fechaCreacion decrecientemente y
+	 * devuelve el primero.
 	 * 
 	 * @return
 	 */
-	Product findTopByOrderByFechaCreacionDesc();
+	Product findTopByDisponibleTrueOrderByFechaCreacionDesc();
 	
 	
 	/**
-	 * Buscamos cuantos registros tenemos por una categoria dada.
+	 * Buscamos cuantos registros tenemos por una categoria dada y tengan Disponible
+	 * true.
+	 * 
 	 * @param Categoria
 	 * @return
 	 */
-	Integer countByCategoria(Categoria categoria);
+	Integer countByCategoriaAndDisponibleTrue(Categoria categoria);
 }

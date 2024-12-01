@@ -17,13 +17,15 @@ import com.agendapro.product_demo.repositories.ProductRepository;
 @Service
 public class ProductsManagerImpl implements ProductManager {
 
-	@Autowired private ProductRepository repository;
-	@Autowired private ModelMapper mapper;
-	
+	@Autowired
+	private ProductRepository repository;
+	@Autowired
+	private ModelMapper mapper;
+
 	@Override
 	public ProductDTO findProductById(Long id) {
 		Optional<Product> opProducto = repository.findById(id);
-		if(opProducto.isPresent()) {
+		if (opProducto.isPresent()) {
 			return mapper.map(opProducto.get(), ProductDTO.class);
 		}
 		return null;
@@ -31,16 +33,16 @@ public class ProductsManagerImpl implements ProductManager {
 
 	@Override
 	public List<ProductDTO> findAllProducts() {
-		return repository.findAll().stream().map(product -> mapper.map(product, ProductDTO.class)).toList();
+		return repository.findAllByDisponibleTrue().stream().map(product -> mapper.map(product, ProductDTO.class))
+				.toList();
 	}
-	
-	
+
 	public ProductDTO saveProduct(ProductDTO product) {
 		Product entity = mapper.map(product, Product.class);
 		entity = repository.save(entity);
 		return mapper.map(entity, ProductDTO.class);
 	}
-	
+
 	public void deleteProduct(ProductDTO product) {
 		repository.deleteById(product.getId());
 	}
@@ -53,19 +55,19 @@ public class ProductsManagerImpl implements ProductManager {
 
 	@Override
 	public ProductDTO findProductWithBiggestStock() {
-		Product product = repository.findTopByOrderByStockDesc();
+		Product product = repository.findTopByDisponibleTrueOrderByStockDesc();
 		return mapper.map(product, ProductDTO.class);
 	}
 
 	@Override
 	public ProductDTO findProductLastestCreated() {
-		Product product = repository.findTopByOrderByFechaCreacionDesc();
+		Product product = repository.findTopByDisponibleTrueOrderByFechaCreacionDesc();
 		return mapper.map(product, ProductDTO.class);
 	}
 
 	@Override
 	public Integer countByCategoria(Categoria categoria) {
-		return repository.countByCategoria(categoria);
+		return repository.countByCategoriaAndDisponibleTrue(categoria);
 	}
 
 }
