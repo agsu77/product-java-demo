@@ -57,4 +57,4 @@ En la API publicamos 7 funcionalidades:
     ```
 4. **Acceder a la API**
     - Swagger: http://localhost:8080/swagger-ui/index.html
-    - API: http://localhost:8080/api/productos (ajusta la ruta según tu implementación)
+    - API: http://localhost:8080/api/productos
