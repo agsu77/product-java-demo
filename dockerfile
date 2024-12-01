@@ -1,13 +1,13 @@
 # Build stage
-FROM openjdk:17-jdk-alpine AS build-stage
+FROM maven:latest AS build-stage
 WORKDIR /app
-COPY src /app/src
-COPY pom.xml /app/pom.xml
+COPY pom.xml ./
+COPY src ./src
 RUN mvn package
 
 # Runtime stage
 FROM openjdk:17-jdk-alpine
 WORKDIR /app
-COPY --from=build-stage target/*.jar app.jar
+COPY --from=build-stage /app/target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
