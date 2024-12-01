@@ -43,8 +43,8 @@ class ProductManagerTest {
 		// Datos de ejemplo
 		productEntity = new Product(1L, "Product1", Categoria.COMIDA, true, null, null, null, null);
 		productEntity2 = new Product(1L, "Product2", Categoria.ELECTRODOMESTICO, true, null, null, null, null);
-		productDTO = new ProductDTO(1L, "Product1", Categoria.COMIDA, true, null, null);
-		productDTO2 = new ProductDTO(1L, "Product2", Categoria.ELECTRODOMESTICO, true, null, null);
+		productDTO = new ProductDTO(1L, "Product1", Categoria.COMIDA, true, null, null, null);
+		productDTO2 = new ProductDTO(1L, "Product2", Categoria.ELECTRODOMESTICO, true, null, null, null);
 	}
 
 	/**

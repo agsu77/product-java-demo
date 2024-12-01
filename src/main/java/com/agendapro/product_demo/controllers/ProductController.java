@@ -36,75 +36,75 @@ public class ProductController {
 	private final ProductManager manager;
 	private final ModelMapper mapper;
 	private final EventQueue events;
-	
+
 	@GetMapping(value = "/{id}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public ProductDTO obtenerProductoPorId(@PathVariable Long id) {
-		logger.info("Recibo request obtenerProductoPorId para el id "+ id);
+		logger.info("Recibo request obtenerProductoPorId para el id " + id);
 		ProductDTO productoEncontrado = manager.findProductById(id);
-		if(productoEncontrado != null) {
-			logger.info("Devuelvo el producto "+ productoEncontrado);
+		if (productoEncontrado != null) {
+			logger.info("Devuelvo el producto " + productoEncontrado);
 			return productoEncontrado;
-		}else {
+		} else {
 			throw new ProductoNotFound(id);
 		}
 	}
-	
-	@GetMapping(value = {"/",""})
+
+	@GetMapping(value = { "/", "" })
 	@ResponseStatus(value = HttpStatus.OK)
 	public List<ProductDTO> obtenerTodosLosProducto() {
 		logger.info("Recibo request obtenerTodosLosProducto");
 		List<ProductDTO> products = manager.findAllProducts();
-		logger.info("Devuelvo "+products.size()+ " productos");
+		logger.info("Devuelvo " + products.size() + " productos");
 		return products;
 	}
-	
+
 	@GetMapping(value = "/porNombre/{nombre}")
 	public List<ProductDTO> obtenerProductosPorNombre(@PathVariable String nombre) {
-		logger.info("Recibo request obtenerProductosPorNombre - buscando por nombre: "+ nombre);
+		logger.info("Recibo request obtenerProductosPorNombre - buscando por nombre: " + nombre);
 		List<ProductDTO> products = manager.findProductsByNombre(nombre);
-		logger.info("Devuelvo "+ products.size() + " productos por el nombre "+ nombre);
+		logger.info("Devuelvo " + products.size() + " productos por el nombre " + nombre);
 		return products;
 	}
-	
-	@PostMapping(value = {"","/"})
+
+	@PostMapping(value = { "", "/" })
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public ProductDTO crearProducto(@Valid @RequestBody ParamProduct param) {
-		logger.info("Recibo request crearProducto para "+ param);
+		logger.info("Recibo request crearProducto para " + param);
 		ProductDTO dto = mapper.map(param, ProductDTO.class);
 		dto = manager.saveProduct(dto);
-		logger.info("Retorno el producto creado "+ dto);
+		logger.info("Retorno el producto creado " + dto);
 		events.sendMessage();
 		return dto;
 	}
-	
+
 	@PutMapping(value = "/{id}")
 	@ResponseStatus(value = HttpStatus.OK)
 	public ProductDTO actualizarProducto(@PathVariable Long id, @Valid @RequestBody ParamModificarProduct param) {
-		logger.info("Recibo un request de actualizarProducto para el id "+ id);
+		logger.info("Recibo un request de actualizarProducto para el id " + id);
 		ProductDTO productFound = manager.findProductById(id);
-		if(productFound == null) {
+		if (productFound == null) {
 			throw new ProductoNotFound(id);
 		}
-		if(param != null) {
+		if (param != null) {
 			productFound.setNombre(param.getNombre());
 			productFound.setCategoria(param.getCategoria());
 			productFound.setDisponible(param.isDisponible());
 		}
 		productFound = manager.saveProduct(productFound);
-		logger.info("Se modifico el registro con id "+id+" con los datos: "+ productFound);
+		logger.info("Se modifico el registro con id " + id + " con los datos: " + productFound);
 		return productFound;
 	}
-	
+
 	@DeleteMapping(value = "/{id}")
 	@ResponseStatus(value = HttpStatus.OK)
 	public void eliminarProducto(@PathVariable Long id) {
-		logger.info("Recibo un request de eliminarProducto para el id "+ id);
+		logger.info("Recibo un request de eliminarProducto para el id " + id);
 		ProductDTO productFound = manager.findProductById(id);
-		if(productFound == null) {
+		if (productFound == null) {
 			throw new ProductoNotFound(id);
 		}
 		manager.deleteProduct(productFound);
-		logger.info("se ha eliminado el producto con id "+ id);
+		logger.info("se ha eliminado el producto con id " + id);
 	}
 }

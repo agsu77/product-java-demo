@@ -25,7 +25,7 @@ public class EstadisticasManagerImpl implements EstadisticasManager {
 	private final Logger logger = Logger.getLogger(this.getClass().getName()); 
 
 	public List<AbstractEstadisticaDto> getEstadisticas() {
-		List<Estadistica> estadisticas = repository.findAll();
+		List<Estadistica> estadisticas = repository.findEstadisticasByOrderByFechaDesc();
 		return estadisticas.stream().map(factory::fromEntity)
 				.toList();
 	}
