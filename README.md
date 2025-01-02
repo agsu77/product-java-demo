@@ -30,7 +30,7 @@ En la API publicamos 7 funcionalidades:
 	- Recibimos un producto de estructura 
 	```
 	{
-	  "nombre": "Bola de caca",
+	  "nombre": "Bola de cacao",
 	  "categoria": "COMIDA",
 	  "precio": -1,
 	  "stock": 230
